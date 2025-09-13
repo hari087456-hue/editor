@@ -1,0 +1,3142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online image and PDF compression tools. Optimize your files without losing quality.">
+    <meta name="keywords" content="image compression, pdf compression, optimize images, reduce file size, online tool">
+    <title>FileCompress Pro+ - Advanced File Optimization Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --background: #1a252f;
+            --warning: #f39c12;
+            --info: #9b59b6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--background);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--dark), #000);
+            border-radius: 0 0 50% 50% / 30%;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(46, 204, 113, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(52, 152, 219, 0.2) 0%, transparent 20%);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+            position: relative;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin: 40px 0 20px;
+            color: var(--secondary);
+            border-left: 5px solid var(--secondary);
+            padding-left: 15px;
+        }
+        
+        h3 {
+            font-size: 1.6rem;
+            margin: 25px 0 15px;
+            color: var(--primary);
+        }
+        
+        h4 {
+            font-size: 1.3rem;
+            margin: 20px 0 10px;
+            color: var(--light);
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .header-subtitle {
+            font-size: 1.3rem;
+            color: var(--light);
+            margin-bottom: 25px;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, #2c3e50, #1a252f);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            font-size: 1.6rem;
+        }
+        
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary);
+            gap: 5px;
+        }
+        
+        .tab-btn {
+            padding: 12px 20px;
+            background: transparent;
+            color: var(--light);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .tab-btn:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+        
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .tool-container {
+            background: linear-gradient(145deg, #2c3e50, #1a252f);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--secondary);
+            border-radius: 8px;
+            padding: 30px 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .upload-area:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .upload-area i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .upload-area p {
+            margin: 10px 0;
+        }
+        
+        .compression-controls {
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 5px;
+            background: #e0e0e0;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+        
+        .quality-value {
+            font-weight: bold;
+            color: var(--primary);
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        /* Improved Max Width Input Styles */
+        .number-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            max-width: 100%;
+        }
+        
+        .number-input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--light);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .number-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+        }
+        
+        .number-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .number-input-buttons {
+            position: absolute;
+            right: 5px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 10px);
+        }
+        
+        .number-input-button {
+            width: 25px;
+            height: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--light);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .number-input-button:first-child {
+            border-top-right-radius: 4px;
+        }
+        
+        .number-input-button:last-child {
+            border-bottom-right-radius: 4px;
+        }
+        
+        .number-input-button:hover {
+            background: var(--primary);
+        }
+        
+        .input-hint {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .button i {
+            margin-right: 8px;
+        }
+        
+        .button-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        .results {
+            display: none;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .results h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .comparison {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .image-box {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+        
+        .image-box img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+        
+        .image-box p {
+            font-weight: 600;
+        }
+        
+        .savings {
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(52, 152, 219, 0.2);
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        /* Image Editor Styles */
+        .editor-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .editor-preview {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .editor-controls {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .editor-control-group {
+            margin-bottom: 15px;
+        }
+        
+        .editor-control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .editor-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Multi-file upload */
+        .multi-upload-area {
+            border: 2px dashed var(--secondary);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .uploaded-files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .uploaded-file {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .uploaded-file img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .uploaded-file .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        /* Text area styles */
+        .text-area {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--light);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+        
+        .text-area:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* PDF-specific styles */
+        .pdf-page-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .pdf-page-control {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .pdf-preview {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .pdf-page {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: white;
+            color: black;
+            border-radius: 5px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .feature {
+            background: linear-gradient(145deg, #2c3e50, #1a252f);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .feature h3 {
+            margin-bottom: 15px;
+            color: var(--light);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--dark), #000);
+            border-radius: 15px;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        footer p {
+            margin: 10px 0;
+        }
+        
+        .copyright {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        /* Loading animation */
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .loader .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: var(--accent);
+            background: rgba(231, 76, 60, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        /* Success message */
+        .success-message {
+            color: var(--primary);
+            background: rgba(46, 204, 113, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        /* Warning message */
+        .warning-message {
+            color: var(--warning);
+            background: rgba(243, 156, 18, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        /* Info message */
+        .info-message {
+            color: var(--info);
+            background: rgba(155, 89, 182, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        /* Format selection */
+        .format-select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--light);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .format-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Batch processing */
+        .batch-controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        /* Crop controls */
+        .crop-container {
+            position: relative;
+            margin-bottom: 20px;
+            border: 2px solid var(--secondary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .crop-handle {
+            position: absolute;
+            background: rgba(46, 204, 113, 0.5);
+            border: 2px solid white;
+            cursor: move;
+        }
+        
+        /* Filter gallery */
+        .filter-gallery {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .filter-item {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .filter-item:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+        
+        .filter-item.active {
+            border-color: var(--secondary);
+        }
+        
+        .filter-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Reorder mode styles */
+        .reorder-mode .uploaded-file {
+            cursor: move;
+        }
+        
+        .reorder-mode .uploaded-file:hover {
+            outline: 2px solid var(--primary);
+        }
+        
+        .reorder-mode .remove-btn {
+            display: none;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            h3 {
+                font-size: 1.5rem;
+            }
+            
+            .header-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .tool-container {
+                padding: 20px 15px;
+            }
+            
+            .upload-area {
+                padding: 20px 10px;
+            }
+            
+            .upload-area i {
+                font-size: 2rem;
+            }
+            
+            .slider-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .comparison {
+                flex-direction: column;
+            }
+            
+            .editor-container {
+                flex-direction: column;
+            }
+            
+            .pdf-page-controls {
+                flex-direction: column;
+            }
+            
+            .button {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            .tab-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 30px 0;
+            }
+            
+            .tool-container {
+                padding: 15px 10px;
+            }
+            
+            .uploaded-file {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .feature {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-compress-alt"></i> FileCompress Pro+</h1>
+            <p class="header-subtitle">Optimize, edit, convert and transform your images and documents</p>
+            <a href="#tool" class="button"><i class="fas fa-bolt"></i> Start Using Tools</a>
+        </header>
+            <!-- ✅ Google AdSense Ad -->
+    <div class="ad-container">
+    <span class="ad-label">AdMob Advertisement</span>
+    <div class="ad-content">
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-4776326465919653"
+            data-ad-slot="2608961126"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+</div>
+
+        <section id="tool">
+            <h2>All-in-One Tool Suite</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="compress">Compress Image</button>
+                <button class="tab-btn" data-tab="edit">Edit Image</button>
+                <button class="tab-btn" data-tab="merge">Merge Images</button>
+                <button class="tab-btn" data-tab="compress-pdf">Compress PDF</button>
+                <button class="tab-btn" data-tab="resize-pdf">Resize PDF</button>
+                <button class="tab-btn" data-tab="merge-pdf">Merge PDF</button>
+                <button class="tab-btn" data-tab="text-to-pdf">Text to PDF</button>
+                <button class="tab-btn" data-tab="pdf-to-text">PDF to Text</button>
+            </div>
+            
+            <!-- Image Compression Tab -->
+            <div class="tab-content active" id="compress-tab">
+                <div class="tool-container">
+                    <div class="upload-area" id="dropArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & Drop your image here</p>
+                        <p>or</p>
+                        <button class="button" id="selectImageBtn"><i class="fas fa-file-image"></i> Select Image</button>
+                        <input type="file" id="fileInput" accept="image/*" hidden>
+                        <p class="supported-formats">Supports: JPG, PNG, WebP, GIF, BMP (Max: 20MB)</p>
+                    </div>
+                    
+                    <div class="compression-controls">
+                        <div class="control-group">
+                            <label for="compressionLevel">Compression Level</label>
+                            <div class="slider-container">
+                                <span class="quality-value" id="qualityValue">80%</span>
+                                <input type="range" min="10" max="100" value="80" class="slider" id="compressionLevel">
+                                <span>High Quality</span>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="outputFormat">Output Format</label>
+                            <select id="outputFormat" class="format-select">
+                                <option value="original">Keep Original Format</option>
+                                <option value="jpeg">JPEG</option>
+                                <option value="png">PNG</option>
+                                <option value="webp">WebP</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="maxWidth">Max Width (optional)</label>
+                            <div class="number-input-container">
+                                <input type="number" id="maxWidth" placeholder="Enter max width in pixels" class="number-input" min="1">
+                                <div class="number-input-buttons">
+                                    <button type="button" class="number-input-button" id="increaseWidth">
+                                        <i class="fas fa-chevron-up"></i>
+                                    </button>
+                                    <button type="button" class="number-input-button" id="decreaseWidth">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="input-hint">Set a maximum width to resize your image (height will adjust automatically)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar" id="compressProgressBar">
+                        <div class="progress" id="compressProgress"></div>
+                    </div>
+                    
+                    <button class="button" id="compressBtn" disabled><i class="fas fa-compress-alt"></i> Compress Image</button>
+                    
+                    <div class="loader" id="loader">
+                        <div class="spinner"></div>
+                        <p>Compressing your image...</p>
+                    </div>
+                    
+                    <div class="error-message" id="compressError"></div>
+                    <div class="success-message" id="compressSuccess"></div>
+                    
+                    <div class="results" id="results">
+                        <h3>Compression Results</h3>
+                        
+                        <div class="comparison">
+                            <div class="image-box">
+                                <h4>Original Image</h4>
+                                <img id="originalImage" src="" alt="Original image">
+                                <p id="originalSize"></p>
+                                <p id="originalDimensions"></p>
+                            </div>
+                            
+                            <div class="image-box">
+                                <h4>Compressed Image</h4>
+                                <img id="compressedImage" src="" alt="Compressed image">
+                                <p id="compressedSize"></p>
+                                <p id="compressedDimensions"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="savings" id="savings"></div>
+                        
+                        <button class="button download-btn" id="downloadBtn"><i class="fas fa-download"></i> Download Compressed Image</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image Editing Tab -->
+            <div class="tab-content" id="edit-tab">
+                <div class="tool-container">
+                    <div class="upload-area" id="editDropArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & Drop your image here</p>
+                        <p>or</p>
+                        <button class="button" id="selectEditImageBtn"><i class="fas fa-file-image"></i> Select Image</button>
+                        <input type="file" id="editFileInput" accept="image/*" hidden>
+                    </div>
+                    
+                    <div class="editor-container">
+                        <div class="editor-preview">
+                            <h4>Preview</h4>
+                            <div class="crop-container" id="cropContainer">
+                                <canvas id="editCanvas" width="500" height="400" style="max-width: 100%; display: block;"></canvas>
+                                <div class="crop-handle" id="cropHandle" style="display: none;"></div>
+                            </div>
+                            
+                            <div class="filter-gallery" id="filterGallery">
+                                <div class="filter-item" data-filter="normal">
+                                    <div style="width:100%;height:100%;background:linear-gradient(45deg, #ff9a9e, #fad0c4)"></div>
+                                    <span style="position:absolute;bottom:2px;left:2px;font-size:9px;color:white;text-shadow:1px 1px 2px black">Normal</span>
+                                </div>
+                                <div class="filter-item" data-filter="grayscale">
+                                    <div style="width:100%;height:100%;background:linear-gradient(45deg, #bdc3c7, #2c3e50)"></div>
+                                    <span style="position:absolute;bottom:2px;left:2px;font-size:9px;color:white;text-shadow:1px 1px 2px black">Grayscale</span>
+                                </div>
+                                <div class="filter-item" data-filter="sepia">
+                                    <div style="width:100%;height:100%;background:linear-gradient(45deg, #bf953f, #fcf6ba)"></div>
+                                    <span style="position:absolute;bottom:2px;left:2px;font-size:9px;color:white;text-shadow:1px 1px 2px black">Sepia</span>
+                                </div>
+                                <div class="filter-item" data-filter="vintage">
+                                    <div style="width:100%;height:100%;background:linear-gradient(45deg, #6a3093, #a044ff)"></div>
+                                    <span style="position:absolute;bottom:2px;left:2px;font-size:9px;color:white;text-shadow:1px 1px 2px black">Vintage</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="editor-controls">
+                            <h4>Editing Tools</h4>
+                            
+                            <div class="editor-control-group">
+                                <label for="brightness">Brightness</label>
+                                <input type="range" id="brightness" min="-100" max="100" value="0" class="slider">
+                            </div>
+                            
+                            <div class="editor-control-group">
+                                <label for="contrast">Contrast</label>
+                                <input type="range" id="contrast" min="-100" max="100" value="0" class="slider">
+                            </div>
+                            
+                            <div class="editor-control-group">
+                                <label for="saturation">Saturation</label>
+                                <input type="range" id="saturation" min="-100" max="100" value="0" class="slider">
+                            </div>
+                            
+                            <div class="editor-control-group">
+                                <label for="rotation">Rotation</label>
+                                <input type="range" id="rotation" min="0" max="360" value="0" class="slider">
+                            </div>
+                            
+                            <div class="editor-control-group">
+                                <label for="cropToggle">Crop Tool</label>
+                                <button class="button button-sm" id="cropToggleBtn"><i class="fas fa-crop-alt"></i> Toggle Crop</button>
+                            </div>
+                            
+                            <div class="editor-actions">
+                                <button class="button button-sm" id="flipHorizontalBtn"><i class="fas fa-arrows-alt-h"></i> Flip H</button>
+                                <button class="button button-sm" id="flipVerticalBtn"><i class="fas fa-arrows-alt-v"></i> Flip V</button>
+                                <button class="button button-sm" id="resetEditBtn"><i class="fas fa-redo"></i> Reset</button>
+                                <button class="button" id="saveEditBtn"><i class="fas fa-save"></i> Save Image</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image Merging Tab -->
+            <div class="tab-content" id="merge-tab">
+                <div class="tool-container">
+                    <div class="multi-upload-area" id="mergeDropArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & Drop multiple images here</p>
+                        <p>or</p>
+                        <button class="button" id="selectMergeImagesBtn"><i class="fas fa-file-image"></i> Select Images</button>
+                        <input type="file" id="mergeFileInput" accept="image/*" multiple hidden>
+                        <p class="supported-formats">Select 2 or more images to merge</p>
+                    </div>
+                    
+                    <div class="uploaded-files" id="uploadedFilesContainer"></div>
+                    
+                    <div class="batch-controls">
+                        <button class="button button-sm" id="clearAllImagesBtn"><i class="fas fa-trash"></i> Clear All</button>
+                        <button class="button button-sm" id="reorderImagesBtn"><i class="fas fa-sort"></i> Reorder</button>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="mergeDirection">Merge Direction</label>
+                        <select id="mergeDirection" class="number-input">
+                            <option value="horizontal">Horizontal</option>
+                            <option value="vertical">Vertical</option>
+                            <option value="grid">Grid (2 columns)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="mergeSpacing">Spacing Between Images (px)</label>
+                        <input type="range" id="mergeSpacing" min="0" max="50" value="0" class="slider">
+                        <span class="quality-value" id="spacingValue">0px</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="backgroundColor">Background Color</label>
+                        <input type="color" id="backgroundColor" value="#000000" class="number-input" style="height: 40px;">
+                    </div>
+                    
+                    <button class="button" id="mergeImagesBtn" disabled><i class="fas fa-object-group"></i> Merge Images</button>
+                    
+                    <div class="loader" id="mergeLoader">
+                        <div class="spinner"></div>
+                        <p>Merging your images...</p>
+                    </div>
+                    
+                    <div class="results" id="mergeResults">
+                        <h3>Merged Image</h3>
+                        <div class="image-box">
+                            <img id="mergedImage" src="" alt="Merged image">
+                        </div>
+                        <button class="button download-btn" id="downloadMergeBtn"><i class="fas fa-download"></i> Download Merged Image</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PDF Compression Tab -->
+            <div class="tab-content" id="compress-pdf-tab">
+                <div class="tool-container">
+                    <h3>PDF Compression Tool</h3>
+                    <p>Reduce the file size of your PDF documents while maintaining quality.</p>
+                    
+                    <div class="upload-area" id="compressPdfDropArea">
+                        <i class="fas fa-file-pdf"></i>
+                        <p>Drag & Drop your PDF here</p>
+                        <p>or</p>
+                        <button class="button" id="selectCompressPdfBtn"><i class="fas fa-file"></i> Select PDF</button>
+                        <input type="file" id="compressPdfFileInput" accept=".pdf" hidden>
+                    </div>
+                    
+                    <div class="compression-controls">
+                        <div class="control-group">
+                            <label for="pdfCompressionLevel">Compression Level</label>
+                            <div class="slider-container">
+                                <span class="quality-value" id="pdfQualityValue">Medium</span>
+                                <input type="range" min="1" max="3" value="2" class="slider" id="pdfCompressionLevel">
+                                <span>Better Quality</span>
+                            </div>
+                            <p class="input-hint">1 - Maximum Compression, 2 - Balanced, 3 - Better Quality</p>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="pdfImageQuality">Image Quality (if present)</label>
+                            <div class="slider-container">
+                                <span class="quality-value" id="pdfImageQualityValue">70%</span>
+                                <input type="range" min="10" max="100" value="70" class="slider" id="pdfImageQuality">
+                                <span>High Quality</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="button" id="compressPdfBtn" disabled><i class="fas fa-compress-alt"></i> Compress PDF</button>
+                    
+                    <div class="progress-bar" id="compressPdfProgressBar">
+                        <div class="progress" id="compressPdfProgress"></div>
+                    </div>
+                    
+                    <div class="loader" id="compressPdfLoader">
+                        <div class="spinner"></div>
+                        <p>Compressing your PDF...</p>
+                    </div>
+                    
+                    <div class="error-message" id="compressPdfError"></div>
+                    <div class="success-message" id="compressPdfSuccess"></div>
+                    
+                    <div class="results" id="compressPdfResults">
+                        <h3>PDF Compression Results</h3>
+                        
+                        <div class="comparison">
+                            <div class="image-box">
+                                <h4>Original PDF</h4>
+                                <div style="width: 100px; height: 130px; margin: 0 auto; background: #2c3e50; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
+                                    <i class="fas fa-file-pdf" style="font-size: 3rem; color: #e74c3c;"></i>
+                                </div>
+                                <p id="originalPdfSize"></p>
+                            </div>
+                            
+                            <div class="image-box">
+                                <h4>Compressed PDF</h4>
+                                <div style="width: 100px; height: 130px; margin: 0 auto; background: #2c3e50; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
+                                    <i class="fas fa-file-pdf" style="font-size: 3rem; color: #2ecc71;"></i>
+                                </div>
+                                <p id="compressedPdfSize"></p>
+                            </div>
+                        </div>
+                        
+                        <div class="savings" id="pdfSavings"></div>
+                        
+                        <button class="button download-btn" id="downloadCompressedPdfBtn"><i class="fas fa-download"></i> Download Compressed PDF</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PDF Resize Tab -->
+            <div class="tab-content" id="resize-pdf-tab">
+                <div class="tool-container">
+                    <h3>PDF Resize Tool</h3>
+                    <p>Resize PDF pages to different dimensions or paper sizes.</p>
+                    
+                    <div class="upload-area" id="resizePdfDropArea">
+                        <i class="fas fa-file-pdf"></i>
+                        <p>Drag & Drop your PDF here</p>
+                        <p>or</p>
+                        <button class="button" id="selectResizePdfBtn"><i class="fas fa-file"></i> Select PDF</button>
+                        <input type="file" id="resizePdfFileInput" accept=".pdf" hidden>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pageSize">Page Size</label>
+                        <select id="pageSize" class="number-input">
+                            <option value="a4">A4 (210×297mm)</option>
+                            <option value="letter">Letter (8.5×11in)</option>
+                            <option value="legal">Legal (8.5×14in)</option>
+                            <option value="a3">A3 (297×420mm)</option>
+                            <option value="a5">A5 (148×210mm)</option>
+                            <option value="custom">Custom Size</option>
+                        </select>
+                    </div>
+                    
+                    <div class="pdf-page-controls" id="customSizeControls" style="display: none;">
+                        <div class="pdf-page-control">
+                            <label for="customWidth">Width (mm)</label>
+                            <input type="number" id="customWidth" class="number-input" value="210" min="50" max="1000">
+                        </div>
+                        <div class="pdf-page-control">
+                            <label for="customHeight">Height (mm)</label>
+                            <input type="number" id="customHeight" class="number-input" value="297" min="50" max="1000">
+                        </div>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pageOrientation">Orientation</label>
+                        <select id="pageOrientation" class="number-input">
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pageRange">Page Range (e.g., 1-5, 8, 11-13)</label>
+                        <input type="text" id="pageRange" class="number-input" placeholder="All pages" value="">
+                    </div>
+                    
+                    <button class="button" id="resizePdfBtn" disabled><i class="fas fa-compress-alt"></i> Resize PDF</button>
+                    
+                    <div class="loader" id="resizePdfLoader">
+                        <div class="spinner"></div>
+                        <p>Resizing your PDF...</p>
+                    </div>
+                    
+                    <div class="error-message" id="resizePdfError"></div>
+                    <div class="success-message" id="resizePdfSuccess"></div>
+                    
+                    <div class="results" id="resizePdfResults">
+                        <h3>PDF Resized Successfully</h3>
+                        <button class="button download-btn" id="downloadResizedPdfBtn"><i class="fas fa-download"></i> Download Resized PDF</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PDF Merge Tab -->
+            <div class="tab-content" id="merge-pdf-tab">
+                <div class="tool-container">
+                    <h3>PDF Merge Tool</h3>
+                    <p>Merge multiple PDF files into a single PDF document.</p>
+                    
+                    <div class="multi-upload-area" id="mergePdfDropArea">
+                        <i class="fas fa-file-pdf"></i>
+                        <p>Drag & Drop multiple PDFs here</p>
+                        <p>or</p>
+                        <button class="button" id="selectMergePdfsBtn"><i class="fas fa-file"></i> Select PDFs</button>
+                        <input type="file" id="mergePdfFileInput" accept=".pdf" multiple hidden>
+                    </div>
+                    
+                    <div class="uploaded-files" id="uploadedPdfsContainer"></div>
+                    
+                    <div class="batch-controls">
+                        <button class="button button-sm" id="clearAllPdfsBtn"><i class="fas fa-trash"></i> Clear All</button>
+                        <button class="button button-sm" id="reorderPdfsBtn"><i class="fas fa-sort"></i> Reorder</button>
+                    </div>
+                    
+                    <button class="button" id="mergePdfsBtn" disabled><i class="fas fa-object-group"></i> Merge PDFs</button>
+                    
+                    <div class="loader" id="mergePdfLoader">
+                        <div class="spinner"></div>
+                        <p>Merging your PDFs...</p>
+                    </div>
+                    
+                    <div class="error-message" id="mergePdfError"></div>
+                    <div class="success-message" id="mergePdfSuccess"></div>
+                    
+                    <div class="results" id="mergePdfResults">
+                        <h3>PDFs Merged Successfully</h3>
+                        <button class="button download-btn" id="downloadMergedPdfBtn"><i class="fas fa-download"></i> Download Merged PDF</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Text to PDF Tab -->
+            <div class="tab-content" id="text-to-pdf-tab">
+                <div class="tool-container">
+                    <h3>Text to PDF Converter</h3>
+                    <p>Convert plain text to a downloadable PDF document.</p>
+                    
+                    <textarea class="text-area" id="textToConvert" placeholder="Enter your text here..."></textarea>
+                    
+                    <div class="control-group">
+                        <label for="pdfFilename">PDF File Name</label>
+                        <input type="text" id="pdfFilename" placeholder="Enter file name" class="number-input" value="document">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pdfFontSize">Font Size</label>
+                        <input type="range" id="pdfFontSize" min="10" max="24" value="12" class="slider">
+                        <span class="quality-value" id="fontSizeValue">12pt</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pdfPageSize">Page Size</label>
+                        <select id="pdfPageSize" class="number-input">
+                            <option value="a4">A4</option>
+                            <option value="letter">Letter</option>
+                            <option value="legal">Legal</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pdfFontFamily">Font Family</label>
+                        <select id="pdfFontFamily" class="number-input">
+                            <option value="helvetica">Helvetica</option>
+                            <option value="times">Times Roman</option>
+                            <option value="courier">Courier</option>
+                        </select>
+                    </div>
+                    
+                    <button class="button" id="textToPdfBtn"><i class="fas fa-file-pdf"></i> Convert to PDF</button>
+                    
+                    <div class="success-message" id="textToPdfSuccess"></div>
+                </div>
+            </div>
+            
+            <!-- PDF to Text Tab -->
+            <div class="tab-content" id="pdf-to-text-tab">
+                <div class="tool-container">
+                    <h3>PDF to Text Converter</h3>
+                    <p>Extract text content from PDF files.</p>
+                    
+                    <div class="upload-area" id="pdfToTextDropArea">
+                        <i class="fas fa-file-pdf"></i>
+                        <p>Drag & Drop your PDF here</p>
+                        <p>or</p>
+                        <button class="button" id="selectPdfToTextBtn"><i class="fas fa-file"></i> Select PDF</button>
+                        <input type="file" id="pdfToTextFileInput" accept=".pdf" hidden>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="textPageRange">Page Range (e.g., 1-5, 8, 11-13)</label>
+                        <input type="text" id="textPageRange" class="number-input" placeholder="All pages" value="">
+                    </div>
+                    
+                    <div class="loader" id="pdfToTextLoader">
+                        <div class="spinner"></div>
+                        <p>Extracting text from PDF...</p>
+                    </div>
+                    
+                    <div class="error-message" id="pdfToTextError"></div>
+                    <div class="success-message" id="pdfToTextSuccess"></div>
+                    
+                    <div class="results" id="pdfToTextResults">
+                        <h3>Extracted Text</h3>
+                        <textarea class="text-area" id="extractedText" readonly></textarea>
+                        <button class="button download-btn" id="downloadTextBtn"><i class="fas fa-download"></i> Download as Text File</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Why Choose FileCompress Pro+?</h2>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Fast Processing</h3>
+                    <p>Compress and edit files in seconds with our optimized algorithms</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Secure & Private</h3>
+                    <p>Your files are processed in-browser and never uploaded to our servers</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-tools"></i>
+                    <h3>Multiple Tools</h3>
+                    <p>All-in-one solution for file compression, editing, merging and conversion</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile Friendly</h3>
+                    <p>Works perfectly on all devices from desktop to mobile phones</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p class="copyright">© 2023 FileCompress Pro+. All rights reserved.</p>
+            <p>This tool is built with HTML5 Canvas and JavaScript for client-side processing.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Set PDF.js worker path
+        pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Show active tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // DOM Elements for Compression Tool
+            const fileInput = document.getElementById('fileInput');
+            const selectImageBtn = document.getElementById('selectImageBtn');
+            const dropArea = document.getElementById('dropArea');
+            const compressionLevel = document.getElementById('compressionLevel');
+            const qualityValue = document.getElementById('qualityValue');
+            const outputFormat = document.getElementById('outputFormat');
+            const compressBtn = document.getElementById('compressBtn');
+            const compressProgressBar = document.getElementById('compressProgressBar');
+            const compressProgress = document.getElementById('compressProgress');
+            const loader = document.getElementById('loader');
+            const compressError = document.getElementById('compressError');
+            const compressSuccess = document.getElementById('compressSuccess');
+            const results = document.getElementById('results');
+            const originalImage = document.getElementById('originalImage');
+            const compressedImage = document.getElementById('compressedImage');
+            const originalSize = document.getElementById('originalSize');
+            const compressedSize = document.getElementById('compressedSize');
+            const originalDimensions = document.getElementById('originalDimensions');
+            const compressedDimensions = document.getElementById('compressedDimensions');
+            const savings = document.getElementById('savings');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const maxWidth = document.getElementById('maxWidth');
+            const increaseWidth = document.getElementById('increaseWidth');
+            const decreaseWidth = document.getElementById('decreaseWidth');
+            
+            // DOM Elements for Image Editing Tool
+            const editFileInput = document.getElementById('editFileInput');
+            const selectEditImageBtn = document.getElementById('selectEditImageBtn');
+            const editDropArea = document.getElementById('editDropArea');
+            const editCanvas = document.getElementById('editCanvas');
+            const cropContainer = document.getElementById('cropContainer');
+            const cropHandle = document.getElementById('cropHandle');
+            const cropToggleBtn = document.getElementById('cropToggleBtn');
+            const filterGallery = document.getElementById('filterGallery');
+            const brightnessSlider = document.getElementById('brightness');
+            const contrastSlider = document.getElementById('contrast');
+            const saturationSlider = document.getElementById('saturation');
+            const rotationSlider = document.getElementById('rotation');
+            const flipHorizontalBtn = document.getElementById('flipHorizontalBtn');
+            const flipVerticalBtn = document.getElementById('flipVerticalBtn');
+            const resetEditBtn = document.getElementById('resetEditBtn');
+            const saveEditBtn = document.getElementById('saveEditBtn');
+            
+            // DOM Elements for Image Merging Tool
+            const mergeFileInput = document.getElementById('mergeFileInput');
+            const selectMergeImagesBtn = document.getElementById('selectMergeImagesBtn');
+            const mergeDropArea = document.getElementById('mergeDropArea');
+            const uploadedFilesContainer = document.getElementById('uploadedFilesContainer');
+            const clearAllImagesBtn = document.getElementById('clearAllImagesBtn');
+            const reorderImagesBtn = document.getElementById('reorderImagesBtn');
+            const mergeDirection = document.getElementById('mergeDirection');
+            const mergeSpacing = document.getElementById('mergeSpacing');
+            const spacingValue = document.getElementById('spacingValue');
+            const backgroundColor = document.getElementById('backgroundColor');
+            const mergeImagesBtn = document.getElementById('mergeImagesBtn');
+            const mergeLoader = document.getElementById('mergeLoader');
+            const mergeResults = document.getElementById('mergeResults');
+            const mergedImage = document.getElementById('mergedImage');
+            const downloadMergeBtn = document.getElementById('downloadMergeBtn');
+            
+            // DOM Elements for PDF Compression Tool
+            const compressPdfFileInput = document.getElementById('compressPdfFileInput');
+            const selectCompressPdfBtn = document.getElementById('selectCompressPdfBtn');
+            const compressPdfDropArea = document.getElementById('compressPdfDropArea');
+            const pdfCompressionLevel = document.getElementById('pdfCompressionLevel');
+            const pdfQualityValue = document.getElementById('pdfQualityValue');
+            const pdfImageQuality = document.getElementById('pdfImageQuality');
+            const pdfImageQualityValue = document.getElementById('pdfImageQualityValue');
+            const compressPdfBtn = document.getElementById('compressPdfBtn');
+            const compressPdfProgressBar = document.getElementById('compressPdfProgressBar');
+            const compressPdfProgress = document.getElementById('compressPdfProgress');
+            const compressPdfLoader = document.getElementById('compressPdfLoader');
+            const compressPdfError = document.getElementById('compressPdfError');
+            const compressPdfSuccess = document.getElementById('compressPdfSuccess');
+            const compressPdfResults = document.getElementById('compressPdfResults');
+            const originalPdfSize = document.getElementById('originalPdfSize');
+            const compressedPdfSize = document.getElementById('compressedPdfSize');
+            const pdfSavings = document.getElementById('pdfSavings');
+            const downloadCompressedPdfBtn = document.getElementById('downloadCompressedPdfBtn');
+            
+            // DOM Elements for PDF Resize Tool
+            const resizePdfFileInput = document.getElementById('resizePdfFileInput');
+            const selectResizePdfBtn = document.getElementById('selectResizePdfBtn');
+            const resizePdfDropArea = document.getElementById('resizePdfDropArea');
+            const pageSize = document.getElementById('pageSize');
+            const customSizeControls = document.getElementById('customSizeControls');
+            const customWidth = document.getElementById('customWidth');
+            const customHeight = document.getElementById('customHeight');
+            const pageOrientation = document.getElementById('pageOrientation');
+            const pageRange = document.getElementById('pageRange');
+            const resizePdfBtn = document.getElementById('resizePdfBtn');
+            const resizePdfLoader = document.getElementById('resizePdfLoader');
+            const resizePdfError = document.getElementById('resizePdfError');
+            const resizePdfSuccess = document.getElementById('resizePdfSuccess');
+            const resizePdfResults = document.getElementById('resizePdfResults');
+            const downloadResizedPdfBtn = document.getElementById('downloadResizedPdfBtn');
+            
+            // DOM Elements for PDF Merge Tool
+            const mergePdfFileInput = document.getElementById('mergePdfFileInput');
+            const selectMergePdfsBtn = document.getElementById('selectMergePdfsBtn');
+            const mergePdfDropArea = document.getElementById('mergePdfDropArea');
+            const uploadedPdfsContainer = document.getElementById('uploadedPdfsContainer');
+            const clearAllPdfsBtn = document.getElementById('clearAllPdfsBtn');
+            const reorderPdfsBtn = document.getElementById('reorderPdfsBtn');
+            const mergePdfsBtn = document.getElementById('mergePdfsBtn');
+            const mergePdfLoader = document.getElementById('mergePdfLoader');
+            const mergePdfError = document.getElementById('mergePdfError');
+            const mergePdfSuccess = document.getElementById('mergePdfSuccess');
+            const mergePdfResults = document.getElementById('mergePdfResults');
+            const downloadMeredPdfBtn = document.getElementById('downloadMergedPdfBtn');
+            
+            // DOM Elements for Text to PDF Tool
+            const textToConvert = document.getElementById('textToConvert');
+            const pdfFilename = document.getElementById('pdfFilename');
+            const pdfFontSize = document.getElementById('pdfFontSize');
+            const fontSizeValue = document.getElementById('fontSizeValue');
+            const pdfPageSize = document.getElementById('pdfPageSize');
+            const pdfFontFamily = document.getElementById('pdfFontFamily');
+            const textToPdfBtn = document.getElementById('textToPdfBtn');
+            const textToPdfSuccess = document.getElementById('textToPdfSuccess');
+            
+            // DOM Elements for PDF to Text Tool
+            const pdfToTextFileInput = document.getElementById('pdfToTextFileInput');
+            const selectPdfToTextBtn = document.getElementById('selectPdfToTextBtn');
+            const pdfToTextDropArea = document.getElementById('pdfToTextDropArea');
+            const textPageRange = document.getElementById('textPageRange');
+            const pdfToTextLoader = document.getElementById('pdfToTextLoader');
+            const pdfToTextError = document.getElementById('pdfToTextError');
+            const pdfToTextSuccess = document.getElementById('pdfToTextSuccess');
+            const pdfToTextResults = document.getElementById('pdfToTextResults');
+            const extractedText = document.getElementById('extractedText');
+            const downloadTextBtn = document.getElementById('downloadTextBtn');
+            
+            let originalFile = null;
+            let compressedDataUrl = null;
+            let editImage = null;
+            let editCtx = editCanvas.getContext('2d');
+            let mergeFiles = [];
+            let horizontalFlip = false;
+            let verticalFlip = false;
+            let isCropping = false;
+            let cropStartX = 0;
+            let cropStartY = 0;
+            let cropWidth = 0;
+            let cropHeight = 0;
+            let currentFilter = 'normal';
+            
+            // PDF variables
+            let compressPdfFile = null;
+            let compressedPdfData = null;
+            let resizePdfFile = null;
+            let resizedPdfData = null;
+            let mergePdfFiles = [];
+            let mergedPdfData = null;
+            let pdfToTextFile = null;
+            
+            // Reordering state variables
+            let isImageReorderMode = false;
+            let isPdfReorderMode = false;
+            
+            // Initialize edit canvas
+            editCtx.fillStyle = '#2c3e50';
+            editCtx.fillRect(0, 0, editCanvas.width, editCanvas.height);
+            editCtx.fillStyle = '#ecf0f1';
+            editCtx.textAlign = 'center';
+            editCtx.font = '16px Arial';
+            editCtx.fillText('Upload an image to edit', editCanvas.width/2, editCanvas.height/2);
+            
+            // Update quality value display
+            compressionLevel.addEventListener('input', function() {
+                qualityValue.textContent = `${this.value}%`;
+            });
+            
+            // Update PDF compression level display - FIXED: Initialize and update properly
+            function updatePdfCompressionDisplay() {
+                const levels = ['Maximum', 'Balanced', 'Better'];
+                pdfQualityValue.textContent = levels[pdfCompressionLevel.value - 1];
+            }
+            
+            // Initialize PDF compression level display
+            updatePdfCompressionDisplay();
+            
+            pdfCompressionLevel.addEventListener('input', updatePdfCompressionDisplay);
+            
+            // Update PDF image quality display
+            pdfImageQuality.addEventListener('input', function() {
+                pdfImageQualityValue.textContent = `${this.value}%`;
+            });
+            
+            // Update font size value display
+            pdfFontSize.addEventListener('input', function() {
+                fontSizeValue.textContent = `${this.value}pt`;
+            });
+            
+            // Update merge spacing value
+            mergeSpacing.addEventListener('input', function() {
+                spacingValue.textContent = `${this.value}px`;
+            });
+            
+            // Show/hide custom size controls based on page size selection
+            pageSize.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customSizeControls.style.display = 'flex';
+                } else {
+                    customSizeControls.style.display = 'none';
+                }
+            });
+            
+            // Open file dialog when button is clicked (compression)
+            selectImageBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Handle file selection (compression)
+            fileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    handleFile(this.files[0]);
+                }
+            });
+            
+            // Increase/Decrease width buttons
+            increaseWidth.addEventListener('click', function() {
+                if (maxWidth.value === '') maxWidth.value = 100;
+                maxWidth.value = parseInt(maxWidth.value) + 10;
+            });
+            
+            decreaseWidth.addEventListener('click', function() {
+                if (maxWidth.value === '' || parseInt(maxWidth.value) <= 10) return;
+                maxWidth.value = parseInt(maxWidth.value) - 10;
+            });
+            
+            // Drag and drop handlers (compression)
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+                dropArea.style.borderColor = '#2ecc71';
+            }
+            
+            function unhighlight() {
+                dropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                dropArea.style.borderColor = '#3498db';
+            }
+            
+            dropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                handleFile(file);
+            });
+            
+            // Handle the selected file (compression)
+            function handleFile(file) {
+                const supportedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp'];
+                
+                if (!supportedTypes.includes(file.type)) {
+                    showError(compressError, 'Please select a supported image file (JPEG, PNG, WebP, GIF, or BMP).');
+                    return;
+                }
+                
+                if (file.size > 20 * 1024 * 1024) {
+                    showError(compressError, 'Please select an image smaller than 20MB.');
+                    return;
+                }
+                
+                originalFile = file;
+                
+                // Display original image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    originalImage.src = e.target.result;
+                    originalSize.textContent = formatBytes(file.size);
+                    
+                    // Get image dimensions
+                    const img = new Image();
+                    img.onload = function() {
+                        originalDimensions.textContent = `${img.width} × ${img.height} pixels`;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+                
+                // Enable compress button
+                compressBtn.disabled = false;
+                
+                // Hide previous results and errors
+                results.style.display = 'none';
+                compressError.style.display = 'none';
+                
+                showSuccess(compressSuccess, 'Image loaded successfully. Adjust compression settings and click Compress.');
+            }
+            
+            // Compress image when button is clicked
+            compressBtn.addEventListener('click', function() {
+                if (!originalFile) return;
+                
+                // Show loading animation
+                compressProgressBar.style.display = 'block';
+                compressProgress.style.width = '0%';
+                loader.style.display = 'block';
+                results.style.display = 'none';
+                compressError.style.display = 'none';
+                
+                // Simulate progress for better UX
+                simulateProgress(compressProgress, 70, 1000, function() {
+                    processImage();
+                });
+            });
+            
+            // Process the image (compression)
+            function processImage() {
+                const quality = compressionLevel.value / 100;
+                const img = new Image();
+                
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    // Calculate new dimensions if maxWidth is specified
+                    if (maxWidth.value && !isNaN(maxWidth.value) && maxWidth.value < width) {
+                        const ratio = maxWidth.value / width;
+                        width = maxWidth.value;
+                        height = height * ratio;
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Determine output format
+                    let outputType = originalFile.type;
+                    if (outputFormat.value !== 'original') {
+                        outputType = `image/${outputFormat.value}`;
+                    }
+                    
+                    // Get compressed data URL
+                    compressedDataUrl = canvas.toDataURL(outputType, quality);
+                    
+                    // Display compressed image
+                    compressedImage.src = compressedDataUrl;
+                    
+                    // Calculate compressed size (approximate)
+                    const compressedBytes = calculateDataUrlSize(compressedDataUrl);
+                    compressedSize.textContent = formatBytes(compressedBytes);
+                    compressedDimensions.textContent = `${width} × ${height} pixels`;
+                    
+                    // Calculate savings
+                    const originalBytes = originalFile.size;
+                    const savingBytes = originalBytes - compressedBytes;
+                    const savingPercent = (savingBytes / originalBytes * 100).toFixed(1);
+                    
+                    savings.innerHTML = `
+                        You saved <strong>${formatBytes(savingBytes)}</strong> 
+                        (<strong>${savingPercent}%</strong> reduction)
+                    `;
+                    
+                    // Complete progress
+                    compressProgress.style.width = '100%';
+                    
+                    setTimeout(function() {
+                        // Hide loader and show results
+                        loader.style.display = 'none';
+                        compressProgressBar.style.display = 'none';
+                        results.style.display = 'block';
+                        
+                        // Scroll to results
+                        results.scrollIntoView({ behavior: 'smooth' });
+                    }, 300);
+                };
+                
+                img.src = URL.createObjectURL(originalFile);
+            }
+            
+            // Download compressed image
+            downloadBtn.addEventListener('click', function() {
+                if (!compressedDataUrl) return;
+                
+                const link = document.createElement('a');
+                link.download = getOutputFilename(originalFile.name, '-compressed', outputFormat.value);
+                link.href = compressedDataUrl;
+                link.click();
+            });
+            
+            // Image Editing Functions
+            selectEditImageBtn.addEventListener('click', function() {
+                editFileInput.click();
+            });
+            
+            editFileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    handleEditImage(this.files[0]);
+                }
+            });
+            
+            // Drag and drop for edit tab
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                editDropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                editDropArea.addEventListener(eventName, () => {
+                    editDropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+                    editDropArea.style.borderColor = '#2ecc71';
+                }, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                editDropArea.addEventListener(eventName, () => {
+                    editDropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                    editDropArea.style.borderColor = '#3498db';
+                }, false);
+            });
+            
+            editDropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                handleEditImage(file);
+            });
+            
+            function handleEditImage(file) {
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    editImage = new Image();
+                    editImage.onload = function() {
+                        editCanvas.width = editImage.width;
+                        editCanvas.height = editImage.height;
+                        drawEditImage();
+                    };
+                    editImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            function drawEditImage() {
+                if (!editImage) return;
+                
+                // Clear canvas
+                editCtx.clearRect(0, 0, editCanvas.width, editCanvas.height);
+                
+                // Apply transformations
+                editCtx.save();
+                
+                // Translate to center for rotation
+                editCtx.translate(editCanvas.width/2, editCanvas.height/2);
+                
+                // Apply rotation
+                const rotation = parseInt(rotationSlider.value);
+                editCtx.rotate(rotation * Math.PI/180);
+                
+                // Apply flips
+                const scaleX = horizontalFlip ? -1 : 1;
+                const scaleY = verticalFlip ? -1 : 1;
+                editCtx.scale(scaleX, scaleY);
+                
+                // Apply filters - FIXED: Use canvas filter instead of CSS filter
+                let filterString = '';
+                
+                switch(currentFilter) {
+                    case 'grayscale':
+                        filterString += 'grayscale(1) ';
+                        break;
+                    case 'sepia':
+                        filterString += 'sepia(1) ';
+                        break;
+                    case 'vintage':
+                        filterString += 'sepia(0.5) contrast(1.2) brightness(0.9) ';
+                        break;
+                }
+                
+                filterString += `
+                    brightness(${100 + parseInt(brightnessSlider.value)}%)
+                    contrast(${100 + parseInt(contrastSlider.value)}%)
+                    saturate(${100 + parseInt(saturationSlider.value)}%)
+                `;
+                
+                // Apply the filter to the context
+                editCtx.filter = filterString;
+                
+                // Draw image
+                editCtx.drawImage(
+                    editImage, 
+                    -editImage.width/2, 
+                    -editImage.height/2,
+                    editImage.width,
+                    editImage.height
+                );
+                
+                editCtx.restore();
+                
+                // Draw crop handle if cropping
+                if (isCropping) {
+                    cropHandle.style.display = 'block';
+                    cropHandle.style.width = cropWidth + 'px';
+                    cropHandle.style.height = cropHeight + 'px';
+                    cropHandle.style.left = cropStartX + 'px';
+                    cropHandle.style.top = cropStartY + 'px';
+                } else {
+                    cropHandle.style.display = 'none';
+                }
+            }
+            
+            // Edit control event listeners
+            brightnessSlider.addEventListener('input', drawEditImage);
+            contrastSlider.addEventListener('input', drawEditImage);
+            saturationSlider.addEventListener('input', drawEditImage);
+            rotationSlider.addEventListener('input', drawEditImage);
+            
+            // Filter selection
+            const filterItems = document.querySelectorAll('.filter-item');
+            filterItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    filterItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.getAttribute('data-filter');
+                    drawEditImage();
+                });
+            });
+            
+            // Set first filter as active
+            filterItems[0].classList.add('active');
+            
+            // Crop functionality
+            let isDragging = false;
+            let startX, startY;
+            
+            cropToggleBtn.addEventListener('click', function() {
+                isCropping = !isCropping;
+                if (isCropping) {
+                    // Initialize crop area to center of image
+                    cropWidth = editImage.width / 2;
+                    cropHeight = editImage.height / 2;
+                    cropStartX = (editImage.width - cropWidth) / 2;
+                    cropStartY = (editImage.height - cropHeight) / 2;
+                    this.innerHTML = '<i class="fas fa-crop-alt"></i> Disable Crop';
+                } else {
+                    this.innerHTML = '<i class="fas fa-crop-alt"></i> Enable Crop';
+                }
+                drawEditImage();
+            });
+            
+            cropContainer.addEventListener('mousedown', function(e) {
+                if (!isCropping) return;
+                
+                isDragging = true;
+                startX = e.clientX - cropStartX;
+                startY = e.clientY - cropStartY;
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging || !isCropping) return;
+                
+                cropStartX = e.clientX - startX;
+                cropStartY = e.clientY - startY;
+                
+                // Constrain to image bounds
+                cropStartX = Math.max(0, Math.min(editImage.width - cropWidth, cropStartX));
+                cropStartY = Math.max(0, Math.min(editImage.height - cropHeight, cropStartY));
+                
+                drawEditImage();
+            });
+            
+            document.addEventListener('mouseup', function() {
+                isDragging = false;
+            });
+            
+            flipHorizontalBtn.addEventListener('click', function() {
+                horizontalFlip = !horizontalFlip;
+                drawEditImage();
+            });
+            
+            flipVerticalBtn.addEventListener('click', function() {
+                verticalFlip = !verticalFlip;
+                drawEditImage();
+            });
+            
+            resetEditBtn.addEventListener('click', function() {
+                brightnessSlider.value = 0;
+                contrastSlider.value = 0;
+                saturationSlider.value = 0;
+                rotationSlider.value = 0;
+                horizontalFlip = false;
+                verticalFlip = false;
+                isCropping = false;
+                cropToggleBtn.innerHTML = '<i class="fas fa-crop-alt"></i> Enable Crop';
+                currentFilter = 'normal';
+                
+                filterItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-filter') === 'normal') {
+                        item.classList.add('active');
+                    }
+                });
+                
+                drawEditImage();
+            });
+            
+            // FIXED: Save the edited image with all transformations applied
+            saveEditBtn.addEventListener('click', function() {
+                if (!editImage) return;
+                
+                // Create a temporary canvas to apply all edits
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                
+                tempCanvas.width = editCanvas.width;
+                tempCanvas.height = editCanvas.height;
+                
+                // Apply all transformations and filters to the temporary canvas
+                tempCtx.save();
+                
+                // Apply transformations
+                tempCtx.translate(tempCanvas.width/2, tempCanvas.height/2);
+                tempCtx.rotate(parseInt(rotationSlider.value) * Math.PI/180);
+                
+                const scaleX = horizontalFlip ? -1 : 1;
+                const scaleY = verticalFlip ? -1 : 1;
+                tempCtx.scale(scaleX, scaleY);
+                
+                // Apply filters
+                let filterString = '';
+                
+                switch(currentFilter) {
+                    case 'grayscale':
+                        filterString += 'grayscale(1) ';
+                        break;
+                    case 'sepia':
+                        filterString += 'sepia(1) ';
+                        break;
+                    case 'vintage':
+                        filterString += 'sepia(0.5) contrast(1.2) brightness(0.9) ';
+                        break;
+                }
+                
+                filterString += `
+                    brightness(${100 + parseInt(brightnessSlider.value)}%)
+                    contrast(${100 + parseInt(contrastSlider.value)}%)
+                    saturate(${100 + parseInt(saturationSlider.value)}%)
+                `;
+                
+                tempCtx.filter = filterString;
+                
+                // Draw image
+                tempCtx.drawImage(
+                    editImage, 
+                    -editImage.width/2, 
+                    -editImage.height/2,
+                    editImage.width,
+                    editImage.height
+                );
+                
+                tempCtx.restore();
+                
+                let canvasToSave = tempCanvas;
+                
+                // If cropping is active, create a cropped version
+                if (isCropping) {
+                    const croppedCanvas = document.createElement('canvas');
+                    croppedCanvas.width = cropWidth;
+                    croppedCanvas.height = cropHeight;
+                    const croppedCtx = croppedCanvas.getContext('2d');
+                    
+                    croppedCtx.drawImage(
+                        tempCanvas,
+                        cropStartX, cropStartY, cropWidth, cropHeight,
+                        0, 0, cropWidth, cropHeight
+                    );
+                    
+                    canvasToSave = croppedCanvas;
+                }
+                
+                const link = document.createElement('a');
+                link.download = 'edited-image.png';
+                link.href = canvasToSave.toDataURL('image/png');
+                link.click();
+            });
+            
+            // Image Merging Functions
+            selectMergeImagesBtn.addEventListener('click', function() {
+                mergeFileInput.click();
+            });
+            
+            mergeFileInput.addEventListener('change', function(e) {
+                if (this.files && this.files.length > 0) {
+                    handleMergeImages(Array.from(this.files));
+                }
+            });
+            
+            // Drag and drop for merge tab
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                mergeDropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                mergeDropArea.addEventListener(eventName, () => {
+                    mergeDropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+                    mergeDropArea.style.borderColor = '#2ecc71';
+                }, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                mergeDropArea.addEventListener(eventName, () => {
+                    mergeDropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                    mergeDropArea.style.borderColor = '#3498db';
+                }, false);
+            });
+            
+            mergeDropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = Array.from(dt.files);
+                handleMergeImages(files);
+            });
+            
+            function handleMergeImages(files) {
+                // Filter only image files
+                const imageFiles = files.filter(file => file.type.match('image.*'));
+                
+                if (imageFiles.length < 2) {
+                    alert('Please select at least 2 image files.');
+                    return;
+                }
+                
+                mergeFiles = imageFiles;
+                
+                // Display uploaded files
+                uploadedFilesContainer.innerHTML = '';
+                
+                mergeFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const fileElement = document.createElement('div');
+                        fileElement.className = 'uploaded-file';
+                        fileElement.setAttribute('data-index', index);
+                        fileElement.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}">
+                            <button class="remove-btn" data-index="${index}">&times;</button>
+                        `;
+                        uploadedFilesContainer.appendChild(fileElement);
+                        
+                        // Add remove event listener
+                        fileElement.querySelector('.remove-btn').addEventListener('click', function() {
+                            const removeIndex = parseInt(this.getAttribute('data-index'));
+                            mergeFiles.splice(removeIndex, 1);
+                            handleMergeImages(mergeFiles); // Refresh the list
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                });
+                
+                // Enable merge button
+                mergeImagesBtn.disabled = false;
+                mergeResults.style.display = 'none';
+            }
+            
+            // Clear all images
+            clearAllImagesBtn.addEventListener('click', function() {
+                mergeFiles = [];
+                uploadedFilesContainer.innerHTML = '';
+                mergeImagesBtn.disabled = true;
+                mergeResults.style.display = 'none';
+            });
+            
+            // FIXED: Implement reordering functionality for images
+            reorderImagesBtn.addEventListener('click', function() {
+                isImageReorderMode = !isImageReorderMode;
+                
+                if (isImageReorderMode) {
+                    // Enter reorder mode
+                    this.innerHTML = '<i class="fas fa-check"></i> Done';
+                    uploadedFilesContainer.classList.add('reorder-mode');
+                    
+                    // Make items draggable
+                    const items = uploadedFilesContainer.querySelectorAll('.uploaded-file');
+                    items.forEach(item => {
+                        item.draggable = true;
+                        
+                        item.addEventListener('dragstart', function(e) {
+                            e.dataTransfer.setData('text/plain', this.getAttribute('data-index'));
+                            this.classList.add('dragging');
+                        });
+                        
+                        item.addEventListener('dragend', function() {
+                            this.classList.remove('dragging');
+                        });
+                    });
+                    
+                    // Enable drop zones
+                    uploadedFilesContainer.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        const afterElement = getDragAfterElement(uploadedFilesContainer, e.clientY);
+                        const draggable = document.querySelector('.dragging');
+                        if (afterElement == null) {
+                            uploadedFilesContainer.appendChild(draggable);
+                        } else {
+                            uploadedFilesContainer.insertBefore(draggable, afterElement);
+                        }
+                    });
+                    
+                    uploadedFilesContainer.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                        const items = Array.from(uploadedFilesContainer.querySelectorAll('.uploaded-file'));
+                        const toIndex = items.indexOf(document.querySelector('.dragging'));
+                        
+                        if (fromIndex !== toIndex) {
+                            // Reorder the mergeFiles array
+                            const item = mergeFiles[fromIndex];
+                            mergeFiles.splice(fromIndex, 1);
+                            mergeFiles.splice(toIndex, 0, item);
+                            
+                            // Update data-index attributes
+                            items.forEach((item, index) => {
+                                item.setAttribute('data-index', index);
+                            });
+                        }
+                    });
+                } else {
+                    // Exit reorder mode
+                    this.innerHTML = '<i class="fas fa-sort"></i> Reorder';
+                    uploadedFilesContainer.classList.remove('reorder-mode');
+                    
+                    // Make items not draggable
+                    const items = uploadedFilesContainer.querySelectorAll('.uploaded-file');
+                    items.forEach(item => {
+                        item.draggable = false;
+                    });
+                    
+                    // Remove event listeners
+                    uploadedFilesContainer.replaceWith(uploadedFilesContainer.cloneNode(true));
+                }
+            });
+            
+            function getDragAfterElement(container, y) {
+                const draggableElements = [...container.querySelectorAll('.uploaded-file:not(.dragging)')];
+                
+                return draggableElements.reduce((closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = y - box.top - box.height / 2;
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset: offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                }, { offset: Number.NEGATIVE_INFINITY }).element;
+            }
+            
+            mergeImagesBtn.addEventListener('click', function() {
+                if (mergeFiles.length < 2) return;
+                
+                mergeLoader.style.display = 'block';
+                
+                // Load all images
+                const imagePromises = mergeFiles.map(file => {
+                    return new Promise((resolve) => {
+                        const img = new Image();
+                        img.onload = () => resolve(img);
+                        img.src = URL.createObjectURL(file);
+                    });
+                });
+                
+                Promise.all(imagePromises).then(images => {
+                    // Create a canvas based on merge direction
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    const direction = mergeDirection.value;
+                    const spacing = parseInt(mergeSpacing.value);
+                    const bgColor = backgroundColor.value;
+                    
+                    if (direction === 'horizontal') {
+                        // Calculate total width and max height
+                        let totalWidth = 0;
+                        let maxHeight = 0;
+                        
+                        images.forEach(img => {
+                            totalWidth += img.width;
+                            maxHeight = Math.max(maxHeight, img.height);
+                        });
+                        
+                        // Add spacing between images
+                        totalWidth += spacing * (images.length - 1);
+                        
+                        canvas.width = totalWidth;
+                        canvas.height = maxHeight;
+                        
+                        // Fill background
+                        ctx.fillStyle = bgColor;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw images horizontally
+                        let xPos = 0;
+                        images.forEach(img => {
+                            ctx.drawImage(img, xPos, 0);
+                            xPos += img.width + spacing;
+                        });
+                    } 
+                    else if (direction === 'vertical') {
+                        // Calculate max width and total height
+                        let maxWidth = 0;
+                        let totalHeight = 0;
+                        
+                        images.forEach(img => {
+                            maxWidth = Math.max(maxWidth, img.width);
+                            totalHeight += img.height;
+                        });
+                        
+                        // Add spacing between images
+                        totalHeight += spacing * (images.length - 1);
+                        
+                        canvas.width = maxWidth;
+                        canvas.height = totalHeight;
+                        
+                        // Fill background
+                        ctx.fillStyle = bgColor;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw images vertically
+                        let yPos = 0;
+                        images.forEach(img => {
+                            ctx.drawImage(img, 0, yPos);
+                            yPos += img.height + spacing;
+                        });
+                    }
+                    else if (direction === 'grid') {
+                        // Grid layout (2 columns)
+                        const cols = 2;
+                        const rows = Math.ceil(images.length / cols);
+                        
+                        // Calculate cell size
+                        let cellWidth = 0;
+                        let cellHeight = 0;
+                        
+                        images.forEach(img => {
+                            cellWidth = Math.max(cellWidth, img.width);
+                            cellHeight = Math.max(cellHeight, img.height);
+                        });
+                        
+                        // Add spacing
+                        cellWidth += spacing;
+                        cellHeight += spacing;
+                        
+                        canvas.width = cellWidth * cols;
+                        canvas.height = cellHeight * rows;
+                        
+                        // Fill background
+                        ctx.fillStyle = bgColor;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw images in grid
+                        images.forEach((img, index) => {
+                            const col = index % cols;
+                            const row = Math.floor(index / cols);
+                            
+                            ctx.drawImage(
+                                img, 
+                                col * cellWidth + spacing/2, 
+                                row * cellHeight + spacing/2
+                            );
+                        });
+                    }
+                    
+                    // Display merged image
+                    mergedImage.src = canvas.toDataURL('image/png');
+                    mergeResults.style.display = 'block';
+                    mergeLoader.style.display = 'none';
+                    
+                    // Set up download
+                    downloadMergeBtn.onclick = function() {
+                        const link = document.createElement('a');
+                        link.download = 'merged-image.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    };
+                });
+            });
+            
+            // PDF Compression Functions
+            selectCompressPdfBtn.addEventListener('click', function() {
+                compressPdfFileInput.click();
+            });
+            
+            compressPdfFileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    handleCompressPdfFile(this.files[0]);
+                }
+            });
+            
+            // Drag and drop for compress PDF
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                compressPdfDropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                compressPdfDropArea.addEventListener(eventName, () => {
+                    compressPdfDropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+                    compressPdfDropArea.style.borderColor = '#2ecc71';
+                }, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                compressPdfDropArea.addEventListener(eventName, () => {
+                    compressPdfDropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                    compressPdfDropArea.style.borderColor = '#3498db';
+                }, false);
+            });
+            
+            compressPdfDropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                handleCompressPdfFile(file);
+            });
+            
+            function handleCompressPdfFile(file) {
+                if (file.type !== 'application/pdf') {
+                    showError(compressPdfError, 'Please select a PDF file.');
+                    return;
+                }
+                
+                compressPdfFile = file;
+                compressPdfBtn.disabled = false;
+                compressPdfResults.style.display = 'none';
+                compressPdfError.style.display = 'none';
+                originalPdfSize.textContent = formatBytes(file.size);
+                
+                showSuccess(compressPdfSuccess, 'PDF loaded successfully. Adjust compression settings and click Compress.');
+            }
+            
+            compressPdfBtn.addEventListener('click', async function() {
+                if (!compressPdfFile) return;
+                
+                compressPdfProgressBar.style.display = 'block';
+                compressPdfProgress.style.width = '0%';
+                compressPdfLoader.style.display = 'block';
+                compressPdfError.style.display = 'none';
+                
+                try {
+                    simulateProgress(compressPdfProgress, 30, 500);
+                    
+                    const arrayBuffer = await compressPdfFile.arrayBuffer();
+                    simulateProgress(compressPdfProgress, 60, 500);
+                    
+                    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                    simulateProgress(compressPdfProgress, 80, 500);
+                    
+                    // Set compression level based on user selection
+                    const compressionLevel = parseInt(pdfCompressionLevel.value);
+                    
+                    // Save with compression options
+                    const pdfBytes = await pdfDoc.save({
+                        useObjectStreams: compressionLevel > 1,
+                        compress: compressionLevel > 1,
+                    });
+                    
+                    compressedPdfData = new Blob([pdfBytes], { type: 'application/pdf' });
+                    
+                    // Update UI with results
+                    compressedPdfSize.textContent = formatBytes(compressedPdfData.size);
+                    
+                    const originalBytes = compressPdfFile.size;
+                    const compressedBytes = compressedPdfData.size;
+                    const savingBytes = originalBytes - compressedBytes;
+                    const savingPercent = (savingBytes / originalBytes * 100).toFixed(1);
+                    
+                    pdfSavings.innerHTML = `
+                        You saved <strong>${formatBytes(savingBytes)}</strong> 
+                        (<strong>${savingPercent}%</strong> reduction)
+                    `;
+                    
+                    compressPdfProgress.style.width = '100%';
+                    
+                    setTimeout(function() {
+                        compressPdfLoader.style.display = 'none';
+                        compressPdfProgressBar.style.display = 'none';
+                        compressPdfResults.style.display = 'block';
+                    }, 300);
+                } catch (error) {
+                    console.error('Error compressing PDF:', error);
+                    showError(compressPdfError, 'Error compressing PDF. Please try again with a different file.');
+                    compressPdfLoader.style.display = 'none';
+                    compressPdfProgressBar.style.display = 'none';
+                }
+            });
+            
+            downloadCompressedPdfBtn.addEventListener('click', function() {
+                if (!compressedPdfData) return;
+                
+                const link = document.createElement('a');
+                link.download = getOutputFilename(compressPdfFile.name, '-compressed');
+                link.href = URL.createObjectURL(compressedPdfData);
+                link.click();
+            });
+            
+            // PDF Resize Functions
+            selectResizePdfBtn.addEventListener('click', function() {
+                resizePdfFileInput.click();
+            });
+            
+            resizePdfFileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    handleResizePdfFile(this.files[0]);
+                }
+            });
+            
+            // Drag and drop for resize PDF
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                resizePdfDropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                resizePdfDropArea.addEventListener(eventName, () => {
+                    resizePdfDropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+                    resizePdfDropArea.style.borderColor = '#2ecc71';
+                }, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                resizePdfDropArea.addEventListener(eventName, () => {
+                    resizePdfDropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                    resizePdfDropArea.style.borderColor = '#3498db';
+                }, false);
+            });
+            
+            resizePdfDropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                handleResizePdfFile(file);
+            });
+            
+            function handleResizePdfFile(file) {
+                if (file.type !== 'application/pdf') {
+                    showError(resizePdfError, 'Please select a PDF file.');
+                    return;
+                }
+                
+                resizePdfFile = file;
+                resizePdfBtn.disabled = false;
+                resizePdfResults.style.display = 'none';
+                resizePdfError.style.display = 'none';
+                
+                showSuccess(resizePdfSuccess, 'PDF loaded successfully. Adjust resize settings and click Resize.');
+            }
+            
+            resizePdfBtn.addEventListener('click', async function() {
+                if (!resizePdfFile) return;
+                
+                resizePdfLoader.style.display = 'block';
+                resizePdfError.style.display = 'none';
+                
+                try {
+                    const arrayBuffer = await resizePdfFile.arrayBuffer();
+                    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+                    
+                    // Parse page range
+                    let pageIndices = pdfDoc.getPageIndices();
+                    if (pageRange.value.trim() !== '') {
+                        pageIndics = parsePageRange(pageRange.value, pdfDoc.getPageCount());
+                    }
+                    
+                    // Get selected page size
+                    let width, height;
+                    const orientation = pageOrientation.value;
+                    
+                    switch(pageSize.value) {
+                        case 'a4':
+                            width = 595.28; // A4 width in points (1/72 inch)
+                            height = 841.89; // A4 height in points
+                            break;
+                        case 'letter':
+                            width = 612; // Letter width
+                            height = 792; // Letter height
+                            break;
+                        case 'legal':
+                            width = 612; // Legal width
+                            height = 1008; // Legal height
+                            break;
+                        case 'a3':
+                            width = 841.89; // A3 width
+                            height = 1190.55; // A3 height
+                            break;
+                        case 'a5':
+                            width = 420.94; // A5 width
+                            height = 595.28; // A5 height
+                            break;
+                        case 'custom':
+                            // Convert mm to points (1 mm = 2.83465 points)
+                            width = parseFloat(customWidth.value) * 2.83465;
+                            height = parseFloat(customHeight.value) * 2.83465;
+                            break;
+                    }
+                    
+                    // Swap dimensions for landscape orientation
+                    if (orientation === 'landscape') {
+                        [width, height] = [height, width];
+                    }
+                    
+                    // Resize specified pages
+                    for (let i = 0; i < pageIndices.length; i++) {
+                        const pageIndex = pageIndices[i];
+                        const page = pdfDoc.getPage(pageIndex);
+                        page.setSize(width, height);
+                    }
+                    
+                    // Save the modified PDF
+                    const pdfBytes = await pdfDoc.save();
+                    resizedPdfData = new Blob([pdfBytes], { type: 'application/pdf' });
+                    
+                    resizePdfLoader.style.display = 'none';
+                    resizePdfResults.style.display = 'block';
+                } catch (error) {
+                    console.error('Error resizing PDF:', error);
+                    showError(resizePdfError, 'Error resizing PDF. Please try again with a different file.');
+                    resizePdfLoader.style.display = 'none';
+                }
+            });
+            
+            downloadResizedPdfBtn.addEventListener('click', function() {
+                if (!resizedPdfData) return;
+                
+                const link = document.createElement('a');
+                link.download = getOutputFilename(resizePdfFile.name, '-resized');
+                link.href = URL.createObjectURL(resizedPdfData);
+                link.click();
+            });
+            
+            // PDF Merge Functions
+            selectMergePdfsBtn.addEventListener('click', function() {
+                mergePdfFileInput.click();
+            });
+            
+            mergePdfFileInput.addEventListener('change', function(e) {
+                if (this.files && this.files.length > 0) {
+                    handleMergePdfs(Array.from(this.files));
+                }
+            });
+            
+            // Drag and drop for merge PDFs
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                mergePdfDropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                mergePdfDropArea.addEventListener(eventName, () => {
+                    mergePdfDropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+                    mergePdfDropArea.style.borderColor = '#2ecc71';
+                }, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                mergePdfDropArea.addEventListener(eventName, () => {
+                    mergePdfDropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                    mergePdfDropArea.style.borderColor = '#3498db';
+                }, false);
+            });
+            
+            mergePdfDropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = Array.from(dt.files);
+                handleMergePdfs(files);
+            });
+            
+            function handleMergePdfs(files) {
+                // Filter only PDF files
+                const pdfFiles = files.filter(file => file.type === 'application/pdf');
+                
+                if (pdfFiles.length < 2) {
+                    showError(mergePdfError, 'Please select at least 2 PDF files.');
+                    return;
+                }
+                
+                mergePdfFiles = pdfFiles;
+                
+                // Display uploaded files
+                uploadedPdfsContainer.innerHTML = '';
+                
+                mergePdfFiles.forEach((file, index) => {
+                    const fileElement = document.createElement('div');
+                    fileElement.className = 'uploaded-file';
+                    fileElement.setAttribute('data-index', index);
+                    fileElement.innerHTML = `
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #2c3e50;">
+                            <i class="fas fa-file-pdf" style="font-size: 2rem; color: #e74c3c;"></i>
+                        </div>
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7; padding: 5px; font-size: 0.7rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                            ${file.name}
+                        </div>
+                        <button class="remove-btn" data-index="${index}">&times;</button>
+                    `;
+                    uploadedPdfsContainer.appendChild(fileElement);
+                    
+                    // Add remove event listener
+                    fileElement.querySelector('.remove-btn').addEventListener('click', function() {
+                        const removeIndex = parseInt(this.getAttribute('data-index'));
+                        mergePdfFiles.splice(removeIndex, 1);
+                        handleMergePdfs(mergePdfFiles); // Refresh the list
+                    });
+                });
+                
+                // Enable merge button
+                mergePdfsBtn.disabled = false;
+                mergePdfResults.style.display = 'none';
+                mergePdfError.style.display = 'none';
+                
+                showSuccess(mergePdfSuccess, 'PDFs loaded successfully. Click Merge to combine them.');
+            }
+            
+            // Clear all PDFs
+            clearAllPdfsBtn.addEventListener('click', function() {
+                mergePdfFiles = [];
+                uploadedPdfsContainer.innerHTML = '';
+                mergePdfsBtn.disabled = true;
+                mergePdfResults.style.display = 'none';
+            });
+            
+            // FIXED: Implement reordering functionality for PDFs
+            reorderPdfsBtn.addEventListener('click', function() {
+                isPdfReorderMode = !isPdfReorderMode;
+                
+                if (isPdfReorderMode) {
+                    // Enter reorder mode
+                    this.innerHTML = '<i class="fas fa-check"></i> Done';
+                    uploadedPdfsContainer.classList.add('reorder-mode');
+                    
+                    // Make items draggable
+                    const items = uploadedPdfsContainer.querySelectorAll('.uploaded-file');
+                    items.forEach(item => {
+                        item.draggable = true;
+                        
+                        item.addEventListener('dragstart', function(e) {
+                            e.dataTransfer.setData('text/plain', this.getAttribute('data-index'));
+                            this.classList.add('dragging');
+                        });
+                        
+                        item.addEventListener('dragend', function() {
+                            this.classList.remove('dragging');
+                        });
+                    });
+                    
+                    // Enable drop zones
+                    uploadedPdfsContainer.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        const afterElement = getDragAfterElement(uploadedPdfsContainer, e.clientY);
+                        const draggable = document.querySelector('.dragging');
+                        if (afterElement == null) {
+                            uploadedPdfsContainer.appendChild(draggable);
+                        } else {
+                            uploadedPdfsContainer.insertBefore(draggable, afterElement);
+                        }
+                    });
+                    
+                    uploadedPdfsContainer.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                        const items = Array.from(uploadedPdfsContainer.querySelectorAll('.uploaded-file'));
+                        const toIndex = items.indexOf(document.querySelector('.dragging'));
+                        
+                        if (fromIndex !== toIndex) {
+                            // Reorder the mergePdfFiles array
+                            const item = mergePdfFiles[fromIndex];
+                            mergePdfFiles.splice(fromIndex, 1);
+                            mergePdfFiles.splice(toIndex, 0, item);
+                            
+                            // Update data-index attributes
+                            items.forEach((item, index) => {
+                                item.setAttribute('data-index', index);
+                            });
+                        }
+                    });
+                } else {
+                    // Exit reorder mode
+                    this.innerHTML = '<i class="fas fa-sort"></i> Reorder';
+                    uploadedPdfsContainer.classList.remove('reorder-mode');
+                    
+                    // Make items not draggable
+                    const items = uploadedPdfsContainer.querySelectorAll('.uploaded-file');
+                    items.forEach(item => {
+                        item.draggable = false;
+                    });
+                    
+                    // Remove event listeners
+                    uploadedPdfsContainer.replaceWith(uploadedPdfsContainer.cloneNode(true));
+                }
+            });
+            
+            mergePdfsBtn.addEventListener('click', async function() {
+                if (mergePdfFiles.length < 2) return;
+                
+                mergePdfLoader.style.display = 'block';
+                mergePdfError.style.display = 'none';
+                
+                try {
+                    const mergedPdf = await PDFLib.PDFDocument.create();
+                    
+                    for (const file of mergePdfFiles) {
+                        const arrayBuffer = await file.arrayBuffer();
+                        const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+                        const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                        
+                        pages.forEach(page => {
+                            mergedPdf.addPage(page);
+                        });
+                    }
+                    
+                    const pdfBytes = await mergedPdf.save();
+                    mergedPdfData = new Blob([pdfBytes], { type: 'application/pdf' });
+                    
+                    mergePdfLoader.style.display = 'none';
+                    mergePdfResults.style.display = 'block';
+                } catch (error) {
+                    console.error('Error merging PDFs:', error);
+                    showError(mergePdfError, 'Error merging PDFs. Please try again with different files.');
+                    mergePdfLoader.style.display = 'none';
+                }
+            });
+            
+            downloadMergedPdfBtn.addEventListener('click', function() {
+                if (!mergedPdfData) return;
+                
+                const link = document.createElement('a');
+                link.download = 'merged-document.pdf';
+                link.href = URL.createObjectURL(mergedPdfData);
+                link.click();
+            });
+            
+            // Text to PDF Functionality
+            textToPdfBtn.addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                
+                const text = textToConvert.value;
+                const filename = pdfFilename.value || 'document';
+                const fontSize = parseInt(pdfFontSize.value);
+                const fontFamily = pdfFontFamily.value;
+                
+                if (!text.trim()) {
+                    alert('Please enter some text to convert to PDF.');
+                    return;
+                }
+                
+                // Determine page size
+                let pageSize = 'a4';
+                if (pdfPageSize.value === 'letter') pageSize = 'letter';
+                if (pdfPageSize.value === 'legal') pageSize = 'legal';
+                
+                const doc = new jsPDF({
+                    orientation: 'p',
+                    unit: 'mm',
+                    format: pageSize
+                });
+                
+                doc.setFontSize(fontSize);
+                doc.setFont(fontFamily);
+                
+                // Split text into lines that fit the page
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const margin = 10;
+                const maxWidth = pageWidth - (margin * 2);
+                
+                const lines = doc.splitTextToSize(text, maxWidth);
+                
+                let y = margin;
+                const lineHeight = fontSize / 2.5;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    if (y > doc.internal.pageSize.getHeight() - margin) {
+                        doc.addPage();
+                        y = margin;
+                    }
+                    
+                    doc.text(lines[i], margin, y);
+                    y += lineHeight;
+                }
+                
+                // Download PDF
+                doc.save(`${filename}.pdf`);
+                
+                showSuccess(textToPdfSuccess, 'PDF created successfully! Download started.');
+            });
+            
+            // PDF to Text Functionality
+            selectPdfToTextBtn.addEventListener('click', function() {
+                pdfToTextFileInput.click();
+            });
+            
+            pdfToTextFileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    handlePdfToTextFile(this.files[0]);
+                }
+            });
+            
+            // Drag and drop for PDF to text
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                pdfToTextDropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                pdfToTextDropArea.addEventListener(eventName, () => {
+                    pdfToTextDropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+                    pdfToTextDropArea.style.borderColor = '#2ecc71';
+                }, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                pdfToTextDropArea.addEventListener(eventName, () => {
+                    pdfToTextDropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                    pdfToTextDropArea.style.borderColor = '#3498db';
+                }, false);
+            });
+            
+            pdfToTextDropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                handlePdfToTextFile(file);
+            });
+            
+            function handlePdfToTextFile(file) {
+                if (file.type !== 'application/pdf') {
+                    showError(pdfToTextError, 'Please select a PDF file.');
+                    return;
+                }
+                
+                pdfToTextFile = file;
+                extractTextFromPdf(file);
+            }
+            
+            async function extractTextFromPdf(file) {
+                pdfToTextLoader.style.display = 'block';
+                pdfToTextError.style.display = 'none';
+                pdfToTextResults.style.display = 'none';
+                pdfToTextSuccess.style.display = 'none';
+                
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                    
+                    // Parse page range
+                    let pageIndices = Array.from({length: pdf.numPages}, (_, i) => i + 1);
+                    if (textPageRange.value.trim() !== '') {
+                        pageIndices = parsePageRange(textPageRange.value, pdf.numPages);
+                    }
+                    
+                    let fullText = '';
+                    
+                    for (let i = 0; i < pageIndices.length; i++) {
+                        const pageNumber = pageIndices[i];
+                        const page = await pdf.getPage(pageNumber);
+                        const textContent = await page.getTextContent();
+                        const pageText = textContent.items.map(item => item.str).join(' ');
+                        fullText += pageText + '\n\n';
+                    }
+                    
+                    extractedText.value = fullText;
+                    pdfToTextLoader.style.display = 'none';
+                    pdfToTextResults.style.display = 'block';
+                    pdfToTextSuccess.style.display = 'block';
+                } catch (error) {
+                    console.error('Error extracting text from PDF:', error);
+                    showError(pdfToTextError, 'Error extracting text from PDF. Please try again with a different file.');
+                    pdfToTextLoader.style.display = 'none';
+                }
+            }
+            
+            downloadTextBtn.addEventListener('click', function() {
+                const text = extractedText.value;
+                if (!text) return;
+                
+                const blob = new Blob([text], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.download = getOutputFilename(pdfToTextFile.name, '-extracted-text', '.txt');
+                link.href = URL.createObjectURL(blob);
+                link.click();
+            });
+            
+            // Helper function to parse page range
+            function parsePageRange(rangeStr, maxPages) {
+                const pages = new Set();
+                const parts = rangeStr.split(',');
+                
+                for (const part of parts) {
+                    if (part.includes('-')) {
+                        const [start, end] = part.split('-').map(num => parseInt(num.trim()));
+                        const realStart = Math.max(1, isNaN(start) ? 1 : start);
+                        const realEnd = Math.min(maxPages, isNaN(end) ? maxPages : end);
+                        
+                        for (let i = realStart; i <= realEnd; i++) {
+                            pages.add(i - 1); // Convert to 0-based index
+                        }
+                    } else {
+                        const page = parseInt(part.trim());
+                        if (!isNaN(page) && page >= 1 && page <= maxPages) {
+                            pages.add(page - 1); // Convert to 0-based index
+                        }
+                    }
+                }
+                
+                return Array.from(pages).sort((a, b) => a - b);
+            }
+            
+            // Helper function to simulate progress
+            function simulateProgress(progressElement, targetPercent, duration, callback) {
+                const startTime = Date.now();
+                const interval = setInterval(() => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const currentPercent = progress * targetPercent;
+                    
+                    progressElement.style.width = currentPercent + '%';
+                    
+                    if (progress >= 1) {
+                        clearInterval(interval);
+                        if (callback) callback();
+                    }
+                }, 20);
+            }
+            
+            // Helper function to show error message
+            function showError(element, message) {
+                element.textContent = message;
+                element.style.display = 'block';
+                
+                // Scroll to error
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // Helper function to show success message
+            function showSuccess(element, message) {
+                element.textContent = message;
+                element.style.display = 'block';
+            }
+            
+            // Helper function to calculate approximate size of data URL
+            function calculateDataUrlSize(dataUrl) {
+                const overhead = 0.37; // Base64 overhead
+                const bytes = (dataUrl.length * overhead);
+                return Math.round(bytes);
+            }
+            
+            // Helper function to format bytes
+            function formatBytes(bytes, decimals = 2) {
+                if (bytes === 0) return '0 Bytes';
+                
+                const k = 1024;
+                const dm = decimals < 0 ? 0 : decimals;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+            
+            // Helper function to generate output filename
+            function getOutputFilename(filename, suffix = '-compressed', extension = null) {
+                const dotIndex = filename.lastIndexOf('.');
+                const name = dotIndex !== -1 ? filename.substring(0, dotIndex) : filename;
+                const ext = extension !== null ? extension : (dotIndex !== -1 ? filename.substring(dotIndex) : '');
+                
+                return `${name}${suffix}${ext}`;
+            }
+        });
+    </script>
+</body>
+</html>
